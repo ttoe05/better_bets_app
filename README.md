@@ -1,7 +1,7 @@
-# quant_finance
-Repository for quantitatitve methods in investing.
+# Better Bets API
 
 ## Description
+Repository for quantitatitve methods and data engineering in sports betting.
 
 ## Dependencies
 
@@ -23,13 +23,4 @@ Repository for quantitatitve methods in investing.
     
 ## Data
 
-    
-## Tasks to Complete
-
-    - [ ] function for pulling raw data of daily prices for publicly traded companies
-    - [ ] function for converting adj close prices to standard and log returns
-    - [ ] function for calculating the Historical VaR
-    - [ ] function for calculating the Parametric VaR
-    - [ ] function for calculating Monte Carlo VaR
-    - [ ] function for calculating Incremental VaR
 
