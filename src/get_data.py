@@ -5,6 +5,10 @@ import logging
 import json
 import sys
 from pathlib import Path
+from nba_api.stats.static import players
+from nba_api.stats.static import teams
+from nba_api.stats.endpoints import playercareerstats
+from nba_api.stats.endpoints import teamyearbyyearstats
 
 # constants for pulling data
 API_KEY = os.environ["ODDS_API_KEY"]
@@ -230,3 +234,30 @@ class OddsData:
     def get_remaining_req(self):
         """ return the number of requests remaining """
         return self._request_remaining
+
+
+class SportsNBA:
+    """
+    the Sports NBA class is a wrapper to the NBA API and returns stats using the api endpoints.
+    Documentation to the nba_api can be found here: https://github.com/swar/nba_api/tree/master/docs/nba_api/stats/endpoints
+    """
+
+    def __init__(self):
+        """
+        initialize the sportsNBA obj for pulling data by pulling the static data needed for all other
+        api calls
+        """
+        self._teams = teams.get_teams()
+        self._players = players.get_players()
+
+    def load_teams(self) -> json:
+        """
+        Return all the nba teams
+        """
+        return self._teams
+
+    def load_players(self) -> json:
+        """
+        Return all the active and inactive nba players
+        """
+        return self._players

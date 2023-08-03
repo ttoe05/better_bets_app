@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
-from get_data import OddsData
+from get_data import OddsData, SportsNBA
 from utils import init_logger
 import pandas as pd
 import ast
@@ -8,6 +8,7 @@ import ast
 app = Flask(__name__)
 api = Api(app)
 odds = OddsData()
+nba = SportsNBA()
 
 
 class Sports(Resource):
@@ -48,10 +49,28 @@ class Odds(Resource):
                                   bookmakers=bookmakers)
         return odds_json
 
+class TeamsNba(Resource):
 
-api.add_resource(Sports, '/sports')
-api.add_resource(Scores, '/scores')
-api.add_resource(Odds, '/odds')
+    def get(self):
+        teams = nba.load_teams()
+        return teams
+
+
+class PlayersNba(Resource):
+
+    def get(self):
+        players = nba.load_players()
+        return players
+
+
+# odds api calls
+api.add_resource(Sports, '/sports')  # link to get the sports
+api.add_resource(Scores, '/scores')  # link to get the scores
+api.add_resource(Odds, '/odds')  # link to get the odds
+
+# NBA api calls
+api.add_resource(TeamsNba, '/sports/nba/teams') # link to get nba teams
+api.add_resource(PlayersNba, '/sports/nba/players') # link to get nba teams
 
 if __name__ == '__main__':
     init_logger(name="app")
