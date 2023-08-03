@@ -49,6 +49,14 @@ class Odds(Resource):
                                   bookmakers=bookmakers)
         return odds_json
 
+
+class ReqsRemaining(Resource):
+
+    def get(self):
+        number_reqs = odds.get_remaining_req()
+        return f"The number of remaining requests:  {number_reqs}"
+
+
 class TeamsNba(Resource):
 
     def get(self):
@@ -67,6 +75,7 @@ class PlayersNba(Resource):
 api.add_resource(Sports, '/sports')  # link to get the sports
 api.add_resource(Scores, '/scores')  # link to get the scores
 api.add_resource(Odds, '/odds')  # link to get the odds
+api.add_resource(ReqsRemaining, '/requests')  # link to get the odds
 
 # NBA api calls
 api.add_resource(TeamsNba, '/sports/nba/teams') # link to get nba teams

@@ -49,6 +49,7 @@ class OddsData:
         self._api_key = API_KEY
         self._request_remaining = 0
         self._json_sports, self._df_sports = self._cache_sports()
+
     def get_data(self, end_point: str,
                  params: dict,
                  api_call_name: str) -> json:
