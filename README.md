@@ -48,7 +48,6 @@ documentation for each of those endpoints.
   - http://127.0.0.1:5000/sports/nba/players
 
 ## Data Architecture
-
-<img src="src/docsrc/data_arch.png" width="128"/>
+![Data Architecture](src/docsrc/data_arch.png)
 
 
