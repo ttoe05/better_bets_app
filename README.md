@@ -47,4 +47,8 @@ documentation for each of those endpoints.
 - To get the nba players. The current version includes both inactive and active players
   - http://127.0.0.1:5000/sports/nba/players
 
+## Data Architecture
+
+<img src="src/docsrc/data_arch.png" width="128"/>
+
 

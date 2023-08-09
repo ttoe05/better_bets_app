@@ -21,8 +21,9 @@ class OddsData:
     are structured to preserve the number of calls by caching frequently used data sets.
     """
 
-    def __init__(self, odds_format: str = 'decimal',
-                 date_format: str = 'iso'):
+    def __init__(self, odds_format: str = 'american',
+                 date_format: str = 'iso',
+                 api_key: str = None):
         """
         Initializing the OddsData object for pulling data using the odds api
         documentation can be found here: https://the-odds-api.com/liveapi/guides/v4/#get-sports
@@ -39,6 +40,9 @@ class OddsData:
         Optional - Determines the format of timestamps in the response. Valid values are unix and iso (ISO 8601).
         Defaults to iso.
 
+            api_key: str
+        The odds api key. If none is passed then default to what is persisted as an environment variable
+
         Returns
         ______________________
 
@@ -46,7 +50,12 @@ class OddsData:
         """
         self.odds_format = odds_format
         self.date_format = date_format
-        self._api_key = API_KEY
+        if api_key is None:
+            logging.info("Setting to the dev key")
+            self._api_key = API_KEY
+        else:
+            logging.info(f"Setting to the prod key")
+            self._api_key = api_key
         self._request_remaining = 0
         self._json_sports, self._df_sports = self._cache_sports()
 
@@ -175,7 +184,6 @@ class OddsData:
                  sport: str,
                  regions: str = 'us',
                  markets: str = None,
-                 odds_format: str = None,
                  event_ids: str = None,
                  bookmakers: str = None) -> json:
         """
@@ -236,6 +244,45 @@ class OddsData:
         """ return the number of requests remaining """
         return self._request_remaining
 
+    def get_odds_history(self,
+                         sport: str,
+                         odds_date: str,
+                         regions: str = 'us',
+                         markets: str = None
+                         ) -> json:
+        """
+        Function pulls the odds data for a given sport on a given date and time.
+
+        Parameters
+        ______________
+            sport: str
+        The sport key obtained from calling the /sports endpoint. upcoming is always valid,
+        returning any live games as well as the next 8 upcoming games across all sports
+
+            odds_date: str
+        The timestamp of the data snapshot to be returned, specified in ISO8601 format, for example
+        2021-10-18T12:00:00Z The historical odds API will return the closest snapshot equal to or
+        earlier than the provided date parameter.
+
+            markets: str
+        Optional - Determines which odds market is returned. Defaults to h2h (head to head / moneyline).
+        Valid markets are h2h (moneyline), spreads (points handicaps), totals (over/under) and outrights (futures).
+        Multiple markets can be specified if comma delimited. spreads and totals markets are mainly available for
+        US sports and bookmakers at this time. Each specified market costs 1 against the usage quota, for each region.
+        Returns a list of upcoming and live games with recent odds for a given sport, region and market
+
+        Returns:
+        _____________
+        json
+        """
+        parameters = {'apiKey': self._api_key,
+                      'regions': regions,
+                      'markets': markets,
+                      'date': odds_date}
+        hist_odds = self.get_data(end_point=f'/v4/sports/{sport}/odds-history/',
+                                  params=parameters,
+                                  api_call_name='odds_history_nba')
+        return hist_odds
 
 class SportsNBA:
     """
