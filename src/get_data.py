@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 from nba_api.stats.static import players
 from nba_api.stats.static import teams
+from nba_api.stats.endpoints import leaguegamefinder
 from nba_api.stats.endpoints import playercareerstats
 from nba_api.stats.endpoints import teamyearbyyearstats
 
@@ -309,3 +310,24 @@ class SportsNBA:
         Return all the active and inactive nba players
         """
         return self._players
+
+    def get_team_game_stats(self, team_id: int) -> pd.DataFrame:
+        """
+        Return a dataframe of all the historical game stats for team. data
+        includes regular season, preseason, playoffs, and even summer league
+
+        Parameters
+        _______________
+
+            team_id: int
+        The team id for the team of interest. This can be retrieved using the load_teams
+        method of the SportsNBA class
+
+        Return
+        ______________
+        pd.DataFrame
+        """
+        logging.info("getting historical team game stats")
+        df_list = leaguegamefinder.LeagueGameFinder(team_id_nullable=team_id).get_data_frames()
+        logging.info(f"number of dataframes {len(df_list)}")
+        return df_list[0]
